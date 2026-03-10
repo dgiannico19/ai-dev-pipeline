@@ -1,6 +1,6 @@
 # AI Dev Pipeline
 
-[![npm version](https://badge.fury.io/js/ai-dev-pipeline.svg)](https://badge.fury.io/js/ai-dev-pipeline)
+[![npm](https://img.shields.io/npm/v/ai-dev-pipeline.svg)](https://www.npmjs.com/package/ai-dev-pipeline)
 
 **AI Dev Pipeline** es una CLI que instala un pipeline de desarrollo de AI estructurado en tu proyecto.  
 Detecta automáticamente el entorno AI y copia los **agents, rules y skills** necesarios para que tu equipo tenga un flujo de trabajo consistente con asistencia AI.
