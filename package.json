@@ -17,5 +17,8 @@
     "ai-dev",
     "developer-tools"
   ],
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "inquirer": "^13.3.0"
+  }
 }
