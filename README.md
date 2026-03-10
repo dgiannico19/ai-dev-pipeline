@@ -1,68 +1,58 @@
 # AI Dev Pipeline
 
-CLI tool that installs a structured AI development pipeline into your project.
+[![npm version](https://badge.fury.io/js/ai-dev-pipeline.svg)](https://badge.fury.io/js/ai-dev-pipeline)
 
-It detects the AI environment automatically and installs the required **agents, rules and skills** so your team can work with a consistent AI-assisted development workflow.
+**AI Dev Pipeline** es una CLI que instala un pipeline de desarrollo de AI estructurado en tu proyecto.  
+Detecta automáticamente el entorno AI y copia los **agents, rules y skills** necesarios para que tu equipo tenga un flujo de trabajo consistente con asistencia AI.
 
-Currently supports:
+Actualmente soporta:
 
 * Cursor
-* Claude
-* Windsurf
 
 ---
 
-# Install
+## Install
 
-Run directly with:
+Ejecutar directamente con `npx`:
 
 ```bash
 npx ai-dev-pipeline init
-```
 
-or install globally:
+O instalar globalmente:
 
-```bash
 npm install -g ai-dev-pipeline
+
+Luego correr:
+
+ai-dev-pipeline init
 ```
 
-then run:
+## Usage
+
+Desde la raíz del proyecto:
 
 ```bash
 ai-dev-pipeline init
 ```
 
----
+El CLI hará:
 
-# Usage
+- Detectar el entorno AI en tu proyecto.
+- Si hay varios entornos, preguntar cuál usar.
+- Instalar el pipeline en el entorno seleccionado.
 
-From the root of your project run:
-
-```bash
-ai-dev-pipeline init
-```
-
-The CLI will:
-
-1. Detect the AI environment in the project
-2. If multiple environments are found, it will ask you which one to use
-3. Install the AI development pipeline into the detected environment
-
-Example:
+Ejemplo:
 
 ```
 ? Multiple AI environments detected. Choose where to install:
-❯ cursor
+❯ cursor (Unico soportado por el momento)
   claude
 ```
 
----
+## What Gets Installed
 
-# What gets installed
-
-The CLI copies the pipeline files into the AI environment directory.
-
-Example result:
+El CLI copia los archivos del pipeline dentro del directorio del entorno AI.
+Ejemplo:
 
 ```
 .cursor
@@ -71,81 +61,67 @@ Example result:
    skills
 ```
 
-These files define the AI development workflow used by the project.
+Estos archivos definen el flujo de trabajo AI del proyecto.
 
-Existing files are **never overwritten**.
-
-If a file already exists:
+Nunca sobrescribe archivos existentes. Si un archivo ya existe:
 
 ```
 ⚠️ Skipped existing file
 ```
 
----
+## Supported Environments
 
-# Supported environments
+El CLI detecta entornos buscando en la raíz del proyecto:
 
-The CLI detects environments by checking the project root for:
+- `.cursor`
+- `.claude`
+- `.windsurf`
 
-```
-.cursor
-.claude
-.windsurf
-```
+Si no encuentra ninguno, la instalación se detiene.
 
-If none are found, the installer will stop.
+## Example Project Structure
 
----
-
-# Example project structure
-
-After running the installer, a project may look like this:
+Después de instalar, el proyecto podría verse así:
 
 ```
-project
-│
-├ .cursor
-│   agents
-│   rules
-│   skills
-│
-├ src
+project/
+├ .cursor/
+│   ├ agents/
+│   ├ rules/
+│   └ skills/
+├ src/
 ├ package.json
 └ ...
 ```
 
----
+## Philosophy
 
-# Philosophy
+AI Dev Pipeline se basa en un principio simple:
 
-AI Dev Pipeline is built around a simple idea:
+AI debe trabajar como un equipo de ingeniería estructurado.
 
-AI should work like a structured engineering team.
+En lugar de depender de prompts aleatorios, el pipeline introduce roles y responsabilidades definidos, haciendo el flujo de AI predecible y mantenible.
 
-Instead of relying on random prompts, the pipeline introduces defined roles and responsibilities so the AI workflow becomes predictable and maintainable.
+Objetivos:
 
-Goals:
+- Evitar arquitectura hallucinada
+- Fomentar razonamiento estructurado
+- Separar análisis de implementación
+- Mejorar mantenibilidad del código generado por AI
 
-* avoid hallucinated architecture
-* encourage structured reasoning
-* separate analysis from implementation
-* improve maintainability of AI-generated code
+## Contributing
 
----
+¡Contribuciones bienvenidas!
 
-# Contributing
+Ideas de mejora:
 
-Contributions are welcome.
+- Nuevos agents
+- Nuevas skills
+- Soporte para más entornos AI
+- Mejoras en el CLI (prompts interactivos, auto-updates, etc.)
 
-Possible improvements:
+Abrir issues o pull requests para colaborar.
 
-* new agents
-* new skills
-* additional AI environment support
-* CLI improvements
-
----
-
-# License
+## License
 
 MIT
