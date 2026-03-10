@@ -1,0 +1,21 @@
+{
+  "name": "ai-dev-pipeline",
+  "version": "1.0.0",
+  "description": "AI development pipeline installer for Cursor, Claude and Windsurf",
+  "bin": {
+    "ai-dev-pipeline": "./bin/cli.js"
+  },
+  "files": [
+    "bin",
+    "src",
+    "templates"
+  ],
+  "keywords": [
+    "ai",
+    "cursor",
+    "agents",
+    "ai-dev",
+    "developer-tools"
+  ],
+  "license": "MIT"
+}
