@@ -1,7 +1,7 @@
 {
   "name": "ai-dev-pipeline",
-  "version": "1.0.9",
-  "description": "AI development pipeline installer for Cursor, Claude and Windsurf",
+  "version": "1.1.0",
+  "description": "AI Development Operating System for Cursor, Claude and Windsurf",
   "bin": {
     "ai-dev-pipeline": "./bin/cli.js"
   },

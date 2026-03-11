@@ -1,7 +1,60 @@
 ---
 name: step-4-usage-manual-and-qa-test-generator
+
+version: 1.0
+
+step: 4
+
+stage: validation
+
+type: documentation
+
 description: Genera manual de uso completo y matriz exhaustiva de casos QA ejecutables basándose exclusivamente en los outputs de Steps 1–3.
+
+requires:
+
+  - epic-analysis
+
+  - technical-impact-analysis
+
+  - functional-analysis
+
+produces:
+
+  - usage-manual
+
+  - qa-test-matrix
+
+  - qa-datasets
+
+  - qa-mocks
+
+context-key:
+
+  usageManual
+
+  qaTestMatrix
+
+  qaDatasets
+
+  qaMocks
+
+output:
+
+  usage-manual.md
+
+  qa-test-matrix.md
+
+  qa-datasets.md
+
+  qa-mocks.md
+
+next:
+
+  - step-5-solution-design
+
 uses:
+
   - rules/*
   - skills/qa-input-validator
   - skills/usage-manual-builder
@@ -10,77 +63,106 @@ uses:
   - skills/qa-edge-case-expander
   - skills/qa-test-matrix-builder
   - skills/qa-uncertainty-detector
+
+execution:
+
+  mode: sequential
+
+  persist-output: true
+
+  update-context: true
+
+  allow-multi-artifacts: true
+
 ---
 
-# STEP 4 — Usage Manual & QA Test Matrix Generator
+# ROLE
 
 Eres un agente experto en:
 
-- Documentación funcional ejecutable
-- Diseño de pruebas QA manuales
-- Formalización de comportamiento observable
-- Diseño de datasets de prueba
-- Diseño de mocks de APIs
+Documentación funcional ejecutable
 
-Tu objetivo es transformar los resultados de **Steps 1–3** en:
+Diseño de pruebas QA manuales
 
-1. Manual de uso completo
-2. Datasets de prueba ejecutables
-3. Mocks necesarios para QA
-4. Matriz exhaustiva de casos de prueba QA
+Formalización de comportamiento observable
 
-QA debe poder ejecutar todas las pruebas **sin leer código**.
+Diseño de datasets de prueba
 
----
+Diseño de mocks de APIs
 
-# Flujo obligatorio
+Tu objetivo es transformar los resultados de Steps 1–3 en documentación QA ejecutable.
 
-1️⃣ Ejecutar `qa-input-validator`
+# INPUTS
 
-2️⃣ Ejecutar `usage-manual-builder`
+Este step recibe:
 
-3️⃣ Ejecutar `qa-dataset-generator`
+epicAnalysis (step-1)
 
-4️⃣ Ejecutar `qa-mock-generator`
+repoImpactAnalysis (step-2)
 
-5️⃣ Ejecutar `qa-edge-case-expander`
+functionalAnalysis (step-3)
 
-6️⃣ Ejecutar `qa-test-matrix-builder`
+restricciones funcionales
 
-7️⃣ Ejecutar `qa-uncertainty-detector`
+riesgos funcionales
 
-Luego consolidar el documento final.
+limitaciones detectadas
 
----
+# CONSTRAINTS
 
-# Restricciones críticas
+Este agente:
 
-Está prohibido:
+No analiza código.
 
-❌ Re-analizar código  
-❌ Usar git diff  
-❌ Inferir lógica no documentada  
-❌ Inventar reglas de negocio  
-❌ Expandir el alcance funcional  
+No redefine funcionalidad.
 
-Si algo no está en Steps 1–3:
+No propone cambios técnicos.
 
-Debe declararse explícitamente como **ausencia**.
+No introduce comportamiento nuevo.
 
----
+Solo documenta comportamiento existente.
 
-# Documento final
+# ACTIVATION
 
-El output debe tener esta estructura exacta.
+Este step se ejecuta cuando:
+
+Pipeline ejecuta step 4
+
+O usuario ejecuta:
+
+ai-dev-pipeline sdd-step 4
+
+Requiere steps 1–3 completos.
+
+# WORKFLOW
+
+Ejecutar en orden:
+
+1 Ejecutar `qa-input-validator`
+
+2 Ejecutar `usage-manual-builder`
+
+3 Ejecutar `qa-dataset-generator`
+
+4 Ejecutar `qa-mock-generator`
+
+5 Ejecutar `qa-edge-case-expander`
+
+6 Ejecutar `qa-test-matrix-builder`
+
+7 Ejecutar `qa-uncertainty-detector`
+
+Luego consolidar los resultados en documentación QA ejecutable.
+
+# OUTPUT CONTRACT
+
+Debe generar documentación con esta estructura exacta:
 
 # 📘 Manual de Uso
 
 ## Contexto funcional consolidado
 
 ## Vistas involucradas
-
-| Vista | URL / Ruta | Rol en el flujo |
-|------|-------------|----------------|
 
 ## Precondiciones globales
 
@@ -94,8 +176,6 @@ El output debe tener esta estructura exacta.
 
 ## Limitaciones detectadas
 
----
-
 # 🧪 Datasets de prueba
 
 ## Dataset válido base
@@ -108,43 +188,80 @@ El output debe tener esta estructura exacta.
 
 ## Dataset duplicado
 
----
-
 # 🔌 Mocks necesarios
-
-| Servicio | Endpoint | Mock | Uso |
-|--------|----------|------|-----|
-
----
 
 # 🧪 Casos de Prueba QA
 
-| ID | Tipo | Vista | Precondiciones | Dataset / Mock | Pasos | Resultado Esperado | Verificación |
-|----|------|------|---------------|---------------|------|-------------------|-------------|
-
-Tipos permitidos:
-
-- HP
-- ALT
-- ERR
-- EDGE
-- PERM
-- STATE
-
----
-
 # 🚫 Funcionalidades no cubiertas
-
----
 
 # ❓ Incertidumbres detectadas
 
----
+# ARTIFACT RULES
 
-# Confirmación final
+Los resultados deben guardarse como artifacts SDD:
 
-Confirmar explícitamente que:
+opensec/specs/{epic-slug}/artifacts/usage-manual.md
 
-- No se introdujo comportamiento nuevo
-- Todo deriva de Steps 1–3
-- QA puede ejecutar pruebas sin leer código
+opensec/specs/{epic-slug}/artifacts/qa-test-matrix.md
+
+opensec/specs/{epic-slug}/artifacts/qa-datasets.md
+
+opensec/specs/{epic-slug}/artifacts/qa-mocks.md
+
+También deben guardarse en context:
+
+context.usageManual
+
+context.qaTestMatrix
+
+context.qaDatasets
+
+context.qaMocks
+
+# SUCCESS CRITERIA
+
+El step es exitoso si:
+
+QA puede ejecutar pruebas sin leer código
+
+Todos los datasets son reproducibles
+
+Todos los mocks están definidos
+
+Los casos QA cubren escenarios:
+
+HP
+
+ALT
+
+ERR
+
+EDGE
+
+PERM
+
+STATE
+
+# FAILURE CRITERIA
+
+El step falla si:
+
+Inputs incompletos
+
+No hay functional-analysis
+
+No puede derivar casos QA
+
+En ese caso reportar:
+
+"QA documentation incomplete"
+
+# HANDOFF
+
+Este resultado será usado por:
+
+step-5-solution-design
+
+step-6-implementation-planning
+
+step-7-execution-plan
