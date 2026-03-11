@@ -1,6 +1,6 @@
 {
   "name": "ai-dev-pipeline",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "AI development pipeline installer for Cursor, Claude and Windsurf",
   "type": "module",
   "bin": {
