@@ -1,15 +1,14 @@
 #!/usr/bin/env node
 
-import init from "../src/commands/init.js"
+import init from "../src/commands/init";
 
-const command = process.argv[2]
+const command = process.argv[2];
 
 const run = async () => {
   switch (command) {
     case "init":
-      await init()
-      break
-
+      await init();
+      break;
     default:
       console.log(`
 AI Dev Pipeline
@@ -17,8 +16,8 @@ AI Dev Pipeline
 Commands:
 
   init     install AI dev pipeline
-`)
+`);
   }
-}
+};
 
-run()
+run();

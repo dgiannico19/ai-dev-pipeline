@@ -1,6 +1,6 @@
 {
   "name": "ai-dev-pipeline",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "AI development pipeline installer for Cursor, Claude and Windsurf",
   "type": "module",
   "bin": {
@@ -20,6 +20,6 @@
   ],
   "license": "MIT",
   "dependencies": {
-    "inquirer": "^13.3.0"
+    "inquirer": "^8.2.7"
   }
 }
