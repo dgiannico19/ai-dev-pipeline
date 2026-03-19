@@ -1,10 +1,18 @@
 {
   "name": "ai-dev-pipeline",
-  "version": "1.2.2",
+  "version": "1.2.3",
   "description": "AI Development Operating System for Cursor, Claude and Windsurf",
   "bin": {
     "ai-dev-pipeline": "./bin/cli.js"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dgiannico19/ai-dev-pipeline.git"
+  },
+  "bugs": {
+    "url": "https://github.com/dgiannico19/ai-dev-pipeline/issues"
+  },
+  "homepage": "https://github.com/dgiannico19/ai-dev-pipeline#readme",
   "files": [
     "bin",
     "src",
