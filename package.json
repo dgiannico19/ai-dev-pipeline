@@ -27,6 +27,6 @@
   ],
   "license": "MIT",
   "dependencies": {
-    "inquirer": "^8.2.5"
+    "inquirer": "^8.2.7"
   }
 }
