@@ -45,33 +45,55 @@ El pipeline establece una **fuente de verdad única** dentro de la carpeta `ai/`
 
 Al inicializar el proyecto, los siguientes agentes estarán disponibles en tu IDE para ser invocados mediante comandos de chat:
 
-### 1. 🏗️ **Iniciador de Propuesta** (Step 1)
+### 🏗️ 1. **Iniciador de Propuesta** (Step 1)
+* **Comando:** `/step-1-ai-proposal-initiator`
 * **Misión:** Analizar el ticket o historia de usuario desde el punto de vista de negocio.
 * **Resultado:** Crea la carpeta de la épica y el archivo `proposal.md`. Define el **"Por qué"** (negocio) y las nuevas **Capabilities** (capacidades) del sistema.
 
 ### 🔍 2. **Analizador de Exploración** (Step 2)
+* **Comando:** `/step-2-ai-exploration-analizer`
 * **Misión:** Escanear el código real para ver dónde impactará el cambio.
 * **Resultado:** Genera `exploration.md`. Identifica archivos afectados, lógica actual y brechas técnicas.
 
 ### 🧠 3. **Constructor de Diseño** (Step 3)
+* **Comando:** `/step-3-ai-designer-builder`
 * **Misión:** El arquitecto. Decide **CÓMO** se resolverá el problema.
 * **Resultado:** Genera `design.md` (decisiones técnicas) y `tasks.md` (el checklist de tareas `[ ]`).
 
 ### 📘 4. **Generador de QA y Manuales** (Step 4)
+* **Comando:** `/step-4-ai-qa-manual-generator`
 * **Misión:** Traducir el diseño en pasos de prueba y documentación de uso.
 * **Resultado:** Genera `testing.md`. Incluye una matriz de pruebas y ejemplos de esquemas (YAML/JSON) para validar sin leer código.
 
 ### 🔨 5. **Ejecutor de Desarrollo** (Step 5)
+* **Comando:** `/step-5-ai-dev-executor`
 * **Misión:** El programador. Escribe el código siguiendo el diseño.
 * **Resultado:** Implementa cambios en el repo y **marca con `[x]`** las tareas completadas en el `tasks.md`.
 
 ### 🛡️ 6. **Revisor Estricto** (Step 6)
+* **Comando:** `/step-6-ai-strict-reviewer`
 * **Misión:** El guardián de calidad (Gatekeeper).
 * **Resultado:** Reporte de auditoría. Bloquea el proceso si el código no coincide con el diseño o si faltan tareas por tildar. Detecta errores de estilo (`const`, early returns, etc).
 
 ### 📦 7. **Organizador de Commits y Archivo** (Step 7)
+* **Comando:** `/step-7-ai-commit-splitter`
 * **Misión:** Notario de cierre. Organiza la historia y limpia el área de trabajo.
 * **Resultado:** Genera el plan de **Conventional Commits** y mueve la épica de `changes/` a `archive/` para liberar el espacio de trabajo.
+
+### 📦 8. Archivador de Conocimiento (Step 8)
+* **Comando:** `/step-8-ai-archiver`
+* **Misión:** Bibliotecario. Cierra el ciclo de vida de la épica.
+* **Resultado:** Mueve la documentación a `ai/archive/` (incluyendo una copia de la spec final) y limpia el área de cambios activos.
+---
+
+🔄 El Ciclo de Vida de las Specs
+A diferencia de otros sistemas, aquí la documentación técnica no es estática, es evolutiva:
+
+Nacimiento (Step 4): El diseño aprobado se "promociona" a ai/specs/ como la nueva verdad oficial del sistema.
+
+Consulta (Step 2): En futuras épicas, la IA lee primero ai/specs/ para no romper reglas de arquitectura previas.
+
+Persistencia (Step 8): Al archivar, se guarda una copia de la spec dentro de la carpeta histórica, permitiendo auditorías de "cómo se veía el sistema en esta fecha".
 
 ---
 
