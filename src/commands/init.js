@@ -32,27 +32,35 @@ const copyDir = (src, dest) => {
 };
 
 const selectEnvironment = async (envs) => {
-  if (envs.length === 1) return envs[0];
+  // Agregamos la opción personalizada al final de la lista
+  const choices = [...envs, new inquirer.Separator(), { name: "➕ Otro (Configuración personalizada)", value: "custom" }];
 
   const answers = await inquirer.prompt([
     {
       type: "list",
       name: "env",
-      message: "Se detectaron múltiples entornos. ¿Cuál quieres configurar?",
-      choices: envs,
+      message: "Selecciona el entorno de IA para configurar:",
+      choices: choices,
+    },
+    {
+      type: "input",
+      name: "customEnv",
+      message: "¿Cómo se llama la carpeta de configuración? (ej: my-ai-rules):",
+      when: (answers) => answers.env === "custom",
+      validate: (input) => input.length > 0 || "El nombre no puede estar vacío.",
+      filter: (input) => input.replace(/^\./, ""), // Quitamos el punto inicial si lo pone, lo manejamos nosotros luego
     },
   ]);
 
-  return answers.env;
+  return answers.env === "custom" ? answers.customEnv : answers.env;
 };
 
-// Nueva función para elegir ubicación
 const selectLocation = async (env) => {
   const answers = await inquirer.prompt([
     {
       type: "list",
       name: "location",
-      message: `¿Dónde quieres instalar los agentes de .${env}?`,
+      message: `¿Dónde quieres instalar los agentes para .${env}?`,
       choices: [
         { name: "📁 En este Proyecto (Local Repo)", value: "project" },
         { name: "🏠 En mi Usuario (Global Home)", value: "home" },
@@ -66,32 +74,44 @@ const selectLocation = async (env) => {
 const init = async () => {
   const projectRoot = process.cwd();
   const userHome = os.homedir();
-  const envs = detectEnvironments();
+  
+  // Detectamos entornos, pero ya no cortamos el flujo si no hay ninguno
+  let detectedEnvs = detectEnvironments();
 
-  if (!envs.length) {
-    console.log("❌ No se detectó ningún entorno de IA soportado.");
-    console.log("Entornos soportados: cursor, claude, windsurf, copilot");
-    return;
-  }
-
-  const env = await selectEnvironment(envs);
+  const env = await selectEnvironment(detectedEnvs);
   const location = await selectLocation(env);
 
-  console.log(`\nConfigurando entorno: ${env}`);
+  console.log(`\n🚀 Configurando entorno: ${env}`);
 
   const packageRoot = path.join(__dirname, "../../");
   const templateRoot = path.join(packageRoot, "templates");
 
-  // Lógica para determinar el Target
+  // Determinamos el Target
   let targetRoot;
+  const folderName = `.${env}`; // Mantenemos la convención del punto
+
   if (location === "home") {
-    targetRoot = path.join(userHome, `.${env}`);
+    targetRoot = path.join(userHome, folderName);
     console.log(`📍 Ubicación elegida: Global (Home)`);
   } else {
-    targetRoot = path.join(projectRoot, `.${env}`);
+    targetRoot = path.join(projectRoot, folderName);
     console.log(`📍 Ubicación elegida: Local (Proyecto)`);
   }
 
+  // --- LÓGICA DE PRIVACIDAD Y DIRECTORIOS ---
+  // 1. Asegurar que existe la carpeta ai/ y ai/changes/ con un .gitkeep
+  const aiChangesPath = path.join(projectRoot, "ai", "changes");
+  const aiSpecsPath = path.join(projectRoot, "ai", "specs");
+  
+  [aiChangesPath, aiSpecsPath].forEach(dir => {
+    if (!fs.existsSync(dir)) {
+      fs.mkdirSync(dir, { recursive: true });
+      fs.writeFileSync(path.join(dir, ".gitkeep"), "");
+      console.log(`📁 Carpeta creada: ${dir}`);
+    }
+  });
+
+  // 2. Instalar Templates del IDE
   if (!fs.existsSync(templateRoot)) {
     console.log(`❌ No se encontró la carpeta de templates en el package.`);
     return;
@@ -99,16 +119,12 @@ const init = async () => {
 
   if (!fs.existsSync(targetRoot)) {
     fs.mkdirSync(targetRoot, { recursive: true });
-    console.log(`📁 Creando directorio .${env}...`);
+    console.log(`📁 Creando directorio ${folderName}...`);
   }
 
   copyDir(templateRoot, targetRoot);
 
   console.log(`\n✅ AI Dev Pipeline instalado con éxito en: ${targetRoot}`);
-  
-  if (location === "home") {
-    console.log("💡 Nota: Al ser una instalación global, afectará a todos los proyectos abiertos con este IDE.");
-  }
 };
 
 module.exports = init;
