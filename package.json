@@ -1,6 +1,6 @@
 {
   "name": "ai-dev-pipeline",
-  "version": "1.2.8",
+  "version": "1.2.9",
   "description": "AI Development Operating System for Cursor, Claude and Windsurf",
   "bin": {
     "ai-dev-pipeline": "./bin/cli.js"

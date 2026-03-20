@@ -3,10 +3,12 @@ name: step-3-ai-design-builder
 description: Consolida el análisis de 'ai/' para generar el borrador de especificación técnica 'design.md' y 'tasks.md'.
 uses:
   - rules/repo-architecture-rule.md
-  - skills/analysis-input-validator
-  - skills/functional-objective-consolidator
   - skills/technical-decision-maker
   - skills/task-list-generator
+  - skills/fsd-architecture-planner
+  - skills/fsd-structure-validator
+  - skills/functional-objective-consolidator
+  - skills/risk-mitigation-planner
 ---
 
 Eres un Software Architect senior. Tu misión es transformar el 'Why' (Proposal) y el 'Estado del Arte' (Exploration) en el 'How' técnico definitivo.

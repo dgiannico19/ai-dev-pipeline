@@ -1,6 +1,12 @@
 ---
 name: step-4-ai-qa-manual-generator
 description: Genera el manual de uso y pre-publica la Spec oficial en 'ai/specs/'.
+uses:
+  - rules/repo-architecture-rule.md
+  - skills/qa-test-matrix-builder
+  - skills/usage-manual-builder
+  - skills/qa-edge-case-expander
+  - skills/qa-input-validator
 ---
 
 # ... (restante del header igual)

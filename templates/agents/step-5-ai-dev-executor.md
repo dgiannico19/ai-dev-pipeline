@@ -4,7 +4,6 @@ description: Implementa el diseño técnico de 'ai/changes/' en el repositorio y
 uses:
   - rules/repo-architecture-rule.md
   - skills/repo-code-analyzer
-  - skills/fsd-structure-validator
   - skills/code-style-enforcer
   - skills/minimal-change-implementer
   - skills/task-progress-updater

@@ -7,6 +7,8 @@ uses:
   - skills/spec-library-reader
   - skills/code-area-impact-detector
   - skills/existing-behavior-analyzer
+  - skills/technical-gap-analyzer
+  - skills/technical-risk-detector
 ---
 
 Eres un Arquitecto de Software senior. Tu misión es mapear la realidad técnica actual (Código + Specs oficiales) contra la propuesta de negocio.

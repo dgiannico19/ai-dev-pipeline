@@ -86,7 +86,115 @@ Al inicializar el proyecto, los siguientes agentes estarán disponibles en tu ID
 * **Resultado:** Mueve la documentación a `ai/archive/` (incluyendo una copia de la spec final) y limpia el área de cambios activos.
 
 ---
+## 🛠️ Arquitectura de Agentes y Skills
 
+Como Staff Engineer, diseñé este pipeline para que cada agente sea un especialista modular, compuesto por skills técnicas reutilizables. A continuación, detallo los 8 steps del pipeline, con sus skills subyacentes que ejecutan la lógica de bajo nivel.
+
+### Step 1: Proposal
+<details>
+<summary>Skills utilizadas en este paso</summary>
+
+| Skill | Descripción Técnica |
+|-------|---------------------|
+| epic-input-validator | Valida la estructura y completitud del ticket de entrada, asegurando que cumpla con estándares de definición de épicas. |
+| ai-path-generator | Genera automáticamente la ruta de directorio en `ai/changes/` basada en el identificador de la épica. |
+| epic-scope-analyzer | Analiza el alcance del ticket para definir claramente el "Why" (justificación de negocio) y el "What" (capacidades técnicas requeridas). |
+| epic-domain-extractor | Extrae el dominio de negocio del ticket para contextualizar la épica dentro de la arquitectura del sistema. |
+| analysis-input-validator | Valida los inputs de análisis para garantizar consistencia antes de procesar la propuesta. |
+
+</details>
+
+### Step 2: Exploration
+<details>
+<summary>Skills utilizadas en este paso</summary>
+
+| Skill | Descripción Técnica |
+|-------|---------------------|
+| spec-library-reader | Lee y parsea la documentación existente en `ai/specs/` para contextualizar el análisis. |
+| repo-structure-scanner | Escanea la estructura del repositorio para mapear archivos relevantes y dependencias. |
+| technical-gap-analyzer | Detecta brechas técnicas, deudas técnicas y riesgos de arquitectura en el código base actual. |
+| existing-behavior-analyzer | Analiza el comportamiento existente del código para identificar patrones y lógica actual. |
+| code-area-impact-detector | Detecta áreas del código que serán impactadas por los cambios propuestos. |
+| technical-risk-detector | Identifica riesgos técnicos potenciales en la implementación del cambio. |
+
+</details>
+
+### Step 3: Design
+<details>
+<summary>Skills utilizadas en este paso</summary>
+
+| Skill | Descripción Técnica |
+|-------|---------------------|
+| technical-decision-maker | Evalúa y selecciona patrones de arquitectura apropiados (FSD, Clean Code, etc.) basados en el contexto del proyecto. |
+| task-list-generator | Genera un checklist estructurado en `tasks.md` con tareas específicas y verificables. |
+| fsd-architecture-planner | Planifica la arquitectura siguiendo el patrón Feature-Sliced Design para modularidad. |
+| fsd-structure-validator | Valida que la estructura propuesta cumpla con las reglas de Feature-Sliced Design. |
+| functional-objective-consolidator | Consolida objetivos funcionales en un diseño coherente y priorizado. |
+| risk-mitigation-planner | Planifica estrategias para mitigar riesgos identificados en el diseño. |
+
+</details>
+
+### Step 4: QA/Manual
+<details>
+<summary>Skills utilizadas en este paso</summary>
+
+| Skill | Descripción Técnica |
+|-------|---------------------|
+| qa-test-matrix-builder | Construye una matriz completa de casos de prueba cubriendo escenarios funcionales y edge cases. |
+| usage-manual-builder | Genera documentación de uso detallada con ejemplos de esquemas (YAML/JSON) para validación. |
+| qa-edge-case-expander | Expande la cobertura de pruebas identificando y documentando casos extremos. |
+| qa-input-validator | Valida los inputs de calidad para asegurar que las pruebas sean ejecutables y relevantes. |
+
+</details>
+
+### Step 5: Executor
+<details>
+<summary>Skills utilizadas en este paso</summary>
+
+| Skill | Descripción Técnica |
+|-------|---------------------|
+| repo-code-analyzer | Analiza el código base para identificar puntos óptimos de inserción y modificación. |
+| task-progress-updater | Actualiza el estado de tareas en `tasks.md`, marcando completadas con `[x]`. |
+| code-style-enforcer | Aplica reglas de estilo de código como early returns, uso de `const` y patrones de legibilidad. |
+| minimal-change-implementer | Implementa cambios con el mínimo impacto posible en el código existente. |
+
+</details>
+
+### Step 6: Reviewer
+<details>
+<summary>Skills utilizadas en este paso</summary>
+
+| Skill | Descripción Técnica |
+|-------|---------------------|
+| diff-change-detector | Compara el código implementado contra el diseño especificado para detectar desviaciones. |
+| code-style-reviewer | Realiza auditoría de calidad de código enfocada en consistencia y mejores prácticas. |
+| task-completion-verifier | Verifica que todas las tareas en `tasks.md` estén completadas antes de permitir el avance. |
+| review-report-builder | Construye un reporte detallado de la revisión con hallazgos y recomendaciones. |
+| steps-alignment-reviewer | Revisa la alineación entre los diferentes steps del pipeline para asegurar coherencia. |
+
+</details>
+
+### Step 7: Commit Splitter
+<details>
+<summary>Skills utilizadas en este paso</summary>
+
+| Skill | Descripción Técnica |
+|-------|---------------------|
+| conventional-commit-generator | Genera mensajes de commit siguiendo el estándar Conventional Commits (feat, fix, etc.). |
+
+</details>
+
+### Step 8: Archiver
+<details>
+<summary>Skills utilizadas en este paso</summary>
+
+| Skill | Descripción Técnica |
+|-------|---------------------|
+| ai-archiver | Mueve la épica completa de `ai/changes/` a `ai/archive/` para preservar el historial. |
+
+</details>
+
+---
 ##  🔄 El Ciclo de Vida de las Specs
 A diferencia de otros sistemas, aquí la documentación técnica no es estática, es evolutiva:
 

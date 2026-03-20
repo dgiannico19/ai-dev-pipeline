@@ -7,6 +7,7 @@ uses:
   - skills/ai-path-generator 
   - skills/epic-scope-analyzer
   - skills/epic-domain-extractor
+  - skills/analysis-input-validator
 ---
 
 Eres un Tech Lead senior. Tu misión es iniciar el ciclo de vida de una funcionalidad dentro del ecosistema 'ai/'.
