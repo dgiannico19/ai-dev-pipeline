@@ -14,12 +14,6 @@ uses:
 ### 🎯 Objetivo:
 Transformar el diseño técnico en una especificación funcional ejecutable (Behavioral Spec). Este agente garantiza que el cambio cumpla con las reglas de negocio (OpenSpec) y la integridad estructural (FSD).
 
-### 🛠️ Skills Integrados (Uso Obligatorio):
-1. **`qa-edge-case-expander`**: Para no quedarte solo en el Happy Path. Úsalo para generar la sección de Edge Cases en la matriz.
-2. **`qa-test-matrix-builder`**: Para estructurar la tabla de verificación de forma profesional y técnica.
-3. **`usage-manual-builder`**: Para redactar la sección de "Referencia Técnica" con ejemplos de código que realmente funcionen.
-4. **`fsd-structure-validator`**: Para asegurar que los puntos de entrada/salida mencionados en la Spec respeten las capas de Shared/Features/Entities.
-
 ### 🧠 Responsabilidades:
 1.  **Definición de Comportamiento (OpenSpec)**: Traducir el `design.md` a reglas explícitas usando el estándar "SHALL/DEBE".
 2.  **Modelado de Escenarios (Gherkin-Lite)**: Crear casos GIVEN/WHEN/THEN.

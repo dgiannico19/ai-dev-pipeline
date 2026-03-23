@@ -1,3 +1,4 @@
+---
 name: step-7-ai-commit-splitter
 description: Arquitecto de historial Git. Transforma el diff en bloques lógicos atómicos y ordenados por funcionalidad/capa.
 uses:
