@@ -1,6 +1,6 @@
 {
   "name": "spec-driven-pipeline",
-  "version": "1.4.3",
+  "version": "1.4.4",
   "description": "CLI spec-driven: agentes, skills y árbol specs/ para Cursor, Windsurf y Claude Code",
   "bin": {
     "spec-driven-pipeline": "./bin/cli.js"
