@@ -7,9 +7,9 @@ Esta guía complementa el [README principal](../README.md). Está pensada para *
 ## 1. Primer día en el repo
 
 1. Clonar el proyecto y abrirlo en el IDE (Cursor, Windsurf, etc.).
-2. Si aún no está instalado el pipeline: `npx ai-dev-pipeline init` (elige entorno y ubicación de agentes).
+2. Si aún no está instalado el pipeline: `npx spec-driven-pipeline init` (elige entorno y ubicación de agentes).
 3. Siempre que cambies rutas o `step_extra_skills` en `pipeline.config.yaml`:  
-   `npx ai-dev-pipeline run`  
+   `npx spec-driven-pipeline run`  
    Eso asegura carpetas bajo `specs/`, crea `specs/config.yaml` si falta y **regenera** `specs/step-extra-skills.md`.
 4. Antes de invocar un agente de un step, conviene tener abiertos o en contexto:
    - `specs/config.yaml` (reglas de stack e idioma del equipo),
@@ -62,7 +62,7 @@ step_extra_skills:
 
 **Regla crítica:** la clave (`step-1-ai-proposal-initiator`, `step-5-ai-dev-executor`, …) debe coincidir **exactamente** con el campo **`name:`** del frontmatter del agente en el IDE **no** con el comando `/step-…` ni con el nombre del archivo `.md` del agente, salvo que sean iguales.
 
-Tras guardar el YAML, ejecutá `npx ai-dev-pipeline run`. Los paths bajo cada agente suelen ser relativos al repo; convención habitual: prefijo `skills/…` apuntando a archivos dentro de `specs/skills/`.
+Tras guardar el YAML, ejecutá `npx spec-driven-pipeline run`. Los paths bajo cada agente suelen ser relativos al repo; convención habitual: prefijo `skills/…` apuntando a archivos dentro de `specs/skills/`.
 
 ---
 
@@ -93,7 +93,7 @@ Esta guía es genérica. En el repo de producto conviene añadir (README interno
 | Síntoma | Qué revisar |
 | :--- | :--- |
 | Los skills extra “no se usan” | ¿Corriste `run`? ¿La clave en YAML es el `name:` del agente? ¿La ruta del archivo existe? |
-| No aparece `specs/step-extra-skills.md` | Ejecutá `npx ai-dev-pipeline run` desde la raíz del repo donde está `pipeline.config.yaml`. |
+| No aparece `specs/step-extra-skills.md` | Ejecutá `npx spec-driven-pipeline run` desde la raíz del repo donde está `pipeline.config.yaml`. |
 | Rutas raras | `docs_root` en `pipeline.config.yaml` cambia el prefijo (por defecto `specs`). Ajustá `skills_path` / `rules_path` si movés carpetas. |
 
 ---

@@ -86,7 +86,7 @@ function writeStepExtraSkillsMd(projectRoot, paths, config) {
   const lines = [
     "# Skills adicionales por step",
     "",
-    "Generado por `npx ai-dev-pipeline run`. Edita `pipeline.config.yaml` → `step_extra_skills`.",
+    "Generado por `npx spec-driven-pipeline run`. Edita `pipeline.config.yaml` → `step_extra_skills`.",
     "Al ejecutar un agente, carga estos recursos **además** de los del frontmatter del agente.",
     "Las claves deben coincidir con el campo `name:` del agente (ej. `step-1-ai-proposal-initiator`).",
     "",

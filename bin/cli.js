@@ -19,11 +19,13 @@ const run = async () => {
 
     default:
       console.log(`
-AI Dev Pipeline 🚀
+Spec-Driven Pipeline 🚀
 
 Commands:
   init     Instala el pipeline, pipeline.config.yaml y el árbol bajo specs/.
   run|sync Crea carpetas si faltan, specs/config.yaml y step-extra-skills.md.
+
+Uso: npx spec-driven-pipeline <comando>
 `);
   }
 };

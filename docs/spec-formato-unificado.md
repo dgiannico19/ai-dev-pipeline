@@ -9,10 +9,10 @@ El paquete recomienda un único formato que combina:
 
 En el repositorio del paquete: [`templates/spec-unified-template.md`](../templates/spec-unified-template.md).
 
-Tras `npx ai-dev-pipeline init`, podés copiarla a tu épica como base:
+Tras `npx spec-driven-pipeline init`, podés copiarla a tu épica como base:
 
 ```bash
-cp node_modules/ai-dev-pipeline/templates/spec-unified-template.md specs/changes/[TU-EPICA]/spec.md
+cp node_modules/spec-driven-pipeline/templates/spec-unified-template.md specs/changes/[TU-EPICA]/spec.md
 ```
 
 (Si no usás `node_modules`, copiá desde el repo fuente del paquete.)

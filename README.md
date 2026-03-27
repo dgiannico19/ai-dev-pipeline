@@ -1,9 +1,9 @@
-# AI Dev Pipeline 🚀
+# Spec-Driven Pipeline 🚀
 
-[![npm](https://img.shields.io/npm/v/ai-dev-pipeline.svg)](https://www.npmjs.com/package/ai-dev-pipeline)
+[![npm](https://img.shields.io/npm/v/spec-driven-pipeline.svg)](https://www.npmjs.com/package/spec-driven-pipeline)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-**AI Dev Pipeline** es una CLI diseñada para instalar un flujo de trabajo de IA estructurado en tu repositorio. Despliega agentes, reglas y habilidades (**skills**) para que la IA razone como un equipo de ingeniería senior.
+**Spec-Driven Pipeline** es una CLI para instalar un flujo de trabajo **centrado en `spec.md` y la carpeta `specs/`**: agentes por steps, reglas, skills y sincronización con el IDE (Cursor, Windsurf, Claude Code).
 
 **Guía para equipos** (onboarding, `config.yaml`, skills propios, `step_extra_skills`, archivo): [docs/guia-equipos.md](docs/guia-equipos.md).
 
@@ -20,11 +20,13 @@
 Puedes ejecutarlo directamente sin instalar usando `npx`:
 
 ```bash
-npx ai-dev-pipeline init
-npx ai-dev-pipeline run
+npx spec-driven-pipeline init
+npx spec-driven-pipeline run
 ```
 
 `run` (alias `sync`) crea el árbol bajo `specs/` si falta, genera `specs/config.yaml` de equipo y actualiza `specs/step-extra-skills.md` a partir de `pipeline.config.yaml`.
+
+> Publicado en npm como **`spec-driven-pipeline`**. Si venías de `ai-dev-pipeline`, migrá los comandos `npx` al nombre nuevo.
 
 ---
 
@@ -44,7 +46,7 @@ La documentación vive bajo **`specs/`** (antes `ai/` en versiones anteriores). 
 
 ### Migración desde `ai/`
 
-Si ya tenías `ai/changes`, `ai/specs`, etc., renombra la carpeta raíz a `specs/` y renombra `ai/specs` → `specs/library`. Si usabas `specs/archive/` en la raíz del docs tree, mueve el contenido a **`specs/changes/archive/`**. Actualiza `pipeline.config.yaml` y ejecuta `npx ai-dev-pipeline run`.
+Si ya tenías `ai/changes`, `ai/specs`, etc., renombra la carpeta raíz a `specs/` y renombra `ai/specs` → `specs/library`. Si usabas `specs/archive/` en la raíz del docs tree, mueve el contenido a **`specs/changes/archive/`**. Actualiza `pipeline.config.yaml` y ejecuta `npx spec-driven-pipeline run`.
 
 ---
 
@@ -64,7 +66,7 @@ step_extra_skills:
     - skills/nuestra-politica-de-tests.md
 ```
 
-Las claves bajo `step_extra_skills` deben coincidir con el campo `name:` del agente. Tras editar, ejecuta `npx ai-dev-pipeline run` para regenerar `specs/step-extra-skills.md`.
+Las claves bajo `step_extra_skills` deben coincidir con el campo `name:` del agente. Tras editar, ejecuta `npx spec-driven-pipeline run` para regenerar `specs/step-extra-skills.md`.
 
 ---
 

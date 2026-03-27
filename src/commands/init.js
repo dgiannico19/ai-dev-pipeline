@@ -158,9 +158,9 @@ const init = async () => {
   if (!fs.existsSync(targetRoot)) fs.mkdirSync(targetRoot, { recursive: true });
   copyDir(templateRoot, targetRoot);
 
-  console.log(`\n✅ AI Dev Pipeline instalado con éxito.`);
+  console.log(`\n✅ Spec-Driven Pipeline instalado con éxito.`);
   console.log(
-    `👉 IMPORTANTE: Corre 'npx ai-dev-pipeline run' para sincronizar el contexto con Cursor.`,
+    `👉 IMPORTANTE: Corre 'npx spec-driven-pipeline run' para sincronizar el contexto con el IDE.`,
   );
 };
 
