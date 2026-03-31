@@ -1,6 +1,8 @@
 /**
- * Bucle de agente: la decisión de seguir con herramientas sigue la presencia de
- * tool_use en el contenido. Además: nudges de continuación, verificación de spec.
+ * Bucle de agente: turnos autónomos hasta texto sin herramientas, VERIFICATION_PASS
+ * o SPEC_AGENT_MAX_TURNS. Con API OpenAI-compatible (Ollama, etc.) se normalizan
+ * tool_calls y bloques tool_use; tras ejecutar herramientas se re-entra al loop
+ * sin intervención del usuario.
  */
 
 const path = require("path");
@@ -118,9 +120,10 @@ function anthropicAssistantMessageToOpenAI(assistantMsg) {
       ),
     },
   }));
+  const textJoined = textParts.join("\n");
   return {
     role: "assistant",
-    content: textParts.length ? textParts.join("\n") : null,
+    content: textJoined.length ? textJoined : "",
     tool_calls,
   };
 }
@@ -142,6 +145,119 @@ function anthropicMessagesToOpenAIChat(messages, system) {
     } else if (msg.role === "assistant") {
       out.push(anthropicAssistantMessageToOpenAI(msg));
     }
+  }
+  return out;
+}
+
+/**
+ * @param {object} tc - tool_call OpenAI-compat
+ * @param {number} index
+ * @returns {{ type: 'tool_use', id: string, name: string, input: object }}
+ */
+function normalizeOpenAIToolCall(tc, index) {
+  const fn = tc.function || tc.functions || {};
+  const name = fn.name || tc.name || "unknown";
+  let input = {};
+  try {
+    const arg = fn.arguments ?? tc.arguments ?? "{}";
+    input = typeof arg === "string" ? JSON.parse(arg || "{}") : arg;
+    if (!input || typeof input !== "object") input = {};
+  } catch {
+    input = {};
+  }
+  const id =
+    tc.id ||
+    tc.tool_call_id ||
+    `call_${index}_${name.replace(/\W/g, "_") || "tool"}`;
+  return { type: "tool_use", id, name, input };
+}
+
+/**
+ * Algunos modelos (p. ej. Ollama) devuelven herramientas solo en el string content (JSON).
+ * @param {string} str
+ * @returns {object[]}
+ */
+function tryParseToolUsesFromAssistantString(str) {
+  if (typeof str !== "string") return [];
+  const trimmed = str.trim();
+  if (!trimmed) return [];
+
+  /** @param {string} s */
+  function parseJsonLoose(s) {
+    try {
+      return JSON.parse(s);
+    } catch {
+      return null;
+    }
+  }
+
+  let j = parseJsonLoose(trimmed);
+  if (!j && trimmed.includes("```")) {
+    const m = trimmed.match(/```(?:json)?\s*([\s\S]*?)```/i);
+    if (m) j = parseJsonLoose(m[1].trim());
+  }
+
+  /** @type {object[]} */
+  const out = [];
+  if (j && typeof j === "object") {
+    const calls = j.tool_calls;
+    if (Array.isArray(calls)) {
+      calls.forEach((tc, i) => out.push(normalizeOpenAIToolCall(tc, i)));
+      return out;
+    }
+    if (j.type === "tool_use" && j.name) {
+      out.push({
+        type: "tool_use",
+        id: j.id || "call_embedded_0",
+        name: j.name,
+        input: j.input && typeof j.input === "object" ? j.input : {},
+      });
+      return out;
+    }
+  }
+
+  if (Array.isArray(j)) {
+    for (let i = 0; i < j.length; i++) {
+      const item = j[i];
+      if (item?.type === "tool_use" && item.name) {
+        out.push({
+          type: "tool_use",
+          id: item.id || `call_arr_${i}`,
+          name: item.name,
+          input: item.input && typeof item.input === "object" ? item.input : {},
+        });
+      }
+    }
+  }
+  return out;
+}
+
+/**
+ * Recolecta tool_calls del mensaje OpenAI (incl. variantes y legacy function_call).
+ * @param {object} msg
+ * @returns {object[]}
+ */
+function collectToolUsesFromOpenAIMessage(msg) {
+  /** @type {object[]} */
+  const out = [];
+  const raw = msg.tool_calls || msg.tool_calls_list;
+  if (Array.isArray(raw)) {
+    raw.forEach((tc, i) => out.push(normalizeOpenAIToolCall(tc, i)));
+  }
+  if (msg.function_call && typeof msg.function_call.name === "string") {
+    let input = {};
+    try {
+      const arg = msg.function_call.arguments ?? "{}";
+      input = typeof arg === "string" ? JSON.parse(arg || "{}") : arg;
+    } catch {
+      input = {};
+    }
+    out.push({
+      type: "tool_use",
+      id: "legacy_function_call",
+      name: msg.function_call.name,
+      input,
+    });
   }
   return out;
 }
@@ -170,36 +286,63 @@ function openAIChatChoiceToAnthropicShape(data) {
         content.push({ type: "text", text: msg.content });
       }
     } else if (Array.isArray(msg.content)) {
+      let tcIdx = 0;
       for (const part of msg.content) {
         if (part?.type === "text" && part.text) {
           content.push({ type: "text", text: part.text });
         }
+        if (
+          part &&
+          (part.type === "tool_use" ||
+            part.type === "function" ||
+            part.type === "tool_call")
+        ) {
+          const synthetic = {
+            id: part.id,
+            function: part.function || {
+              name: part.name,
+              arguments:
+                typeof part.arguments === "string"
+                  ? part.arguments
+                  : JSON.stringify(part.input ?? {}),
+            },
+          };
+          content.push(normalizeOpenAIToolCall(synthetic, tcIdx));
+          tcIdx += 1;
+        }
       }
     }
   }
-  if (Array.isArray(msg.tool_calls)) {
-    for (const tc of msg.tool_calls) {
-      let input = {};
-      try {
-        const arg = tc.function?.arguments ?? "{}";
-        input = typeof arg === "string" ? JSON.parse(arg || "{}") : arg;
-      } catch {
-        input = {};
-      }
-      content.push({
-        type: "tool_use",
-        id: tc.id,
-        name: tc.function?.name ?? "unknown",
-        input,
-      });
+
+  const fromMessage = collectToolUsesFromOpenAIMessage(msg);
+  const seenIds = new Set(
+    content.filter((b) => b.type === "tool_use").map((b) => b.id),
+  );
+  for (const tu of fromMessage) {
+    if (!seenIds.has(tu.id)) {
+      content.push(tu);
+      seenIds.add(tu.id);
     }
   }
+
+  if (!content.some((b) => b.type === "tool_use") && typeof msg.content === "string") {
+    const embedded = tryParseToolUsesFromAssistantString(msg.content);
+    for (const tu of embedded) {
+      if (!seenIds.has(tu.id)) {
+        content.push(tu);
+        seenIds.add(tu.id);
+      }
+    }
+  }
+
+  const hasToolsFinal = content.some((b) => b.type === "tool_use");
 
   let stop_reason = "end_turn";
   if (finish === "length") stop_reason = "max_tokens";
   else if (
     finish === "tool_calls" ||
-    content.some((b) => b.type === "tool_use")
+    finish === "tool_use" ||
+    hasToolsFinal
   ) {
     stop_reason = "tool_use";
   }
@@ -309,8 +452,9 @@ async function executeToolUses(assistantMessage, cfg) {
   const toolBlocks = content.filter((b) => b.type === "tool_use");
   const results = [];
 
-  for (const block of toolBlocks) {
-    const id = block.id;
+  for (let i = 0; i < toolBlocks.length; i++) {
+    const block = toolBlocks[i];
+    const id = block.id || `missing_${i}_${block.name || "tool"}`;
     const name = block.name;
     const input = block.input && typeof block.input === "object" ? block.input : {};
     const def = registry[name];
@@ -501,7 +645,37 @@ async function runAgentLoop(params) {
       continue;
     }
 
+    if (stopReason === "tool_use") {
+      return {
+        messages,
+        lastResponse: response,
+        stopReason,
+        turns: turn,
+        nudgeCount,
+        verificationState,
+        gapRound,
+        completed: false,
+        warning:
+          "La API marcó tool_use pero no hay bloques tool_use parseables; revisá el formato de respuesta del backend.",
+      };
+    }
+
     // --- Solo texto (sin tool_use en esta respuesta) ---
+
+    if (textOnly.includes(VERIFICATION_PASS_TOKEN)) {
+      verificationState = "passed";
+      return {
+        messages,
+        lastResponse: response,
+        stopReason,
+        turns: turn,
+        nudgeCount,
+        verificationState,
+        gapRound,
+        completed: true,
+        verificationOutcome: "pass",
+      };
+    }
 
     if (
       shouldNudgeContinuation(
