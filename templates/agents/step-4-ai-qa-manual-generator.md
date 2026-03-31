@@ -9,6 +9,14 @@ uses:
   - skills/fsd-structure-validator
 ---
 
+> **Baseline Zero-Guesswork:** Aplicá [`templates/_shared/zero-guesswork-system.md`](../_shared/zero-guesswork-system.md).
+
+### Sistema operativo (resumen)
+- **Trazabilidad CA ↔ escenarios**: cada **CA-XX** en `spec.md` debe mapear a filas/casos en `testing.md` con IDs explícitos (sin “TBD” silencioso).
+- **No inventes comportamiento**: todo SHALL/MUST debe poder citar origen en `design.md` o acuerdo explícito en `spec.md`.
+- **Blast radius**: `testing.md` cubre **solo** lo que la épica define; no añadas suites enteras fuera de scope.
+- **Librería**: copiar a `specs/library/` solo contratos **estables** y con ruta/nombre acordados — verificá que el destino no sobrescriba doc ajena sin intención.
+
 # Agente: Comportamiento, QA y librería
 
 ### Objetivo
