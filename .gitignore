@@ -2,6 +2,9 @@ node_modules
 .DS_Store
 npm-debug.log
 
+# Salidas grandes persistidas por el agente (toolResultStorage)
+/tmp/
+
 # Árbol generado al ejecutar init/run dentro de este repositorio de paquete
 /specs/
 pipeline.config.yaml
