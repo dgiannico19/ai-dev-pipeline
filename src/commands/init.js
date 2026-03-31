@@ -12,6 +12,7 @@ const {
   ensureTeamConfigYaml,
   writeStepExtraSkillsMd,
 } = require("../lib/specPaths");
+const { writeProjectContextMd } = require("../lib/projectDiscovery");
 
 const copyDir = (src, dest) => {
   if (!fs.existsSync(src)) return;
@@ -122,6 +123,8 @@ const init = async () => {
   }
   const skillsMd = writeStepExtraSkillsMd(projectRoot, paths, cfg);
   console.log(`✔ Generado: ${path.relative(projectRoot, skillsMd)}`);
+  const projectCtx = writeProjectContextMd(projectRoot, paths);
+  console.log(`✔ Contexto del repo: ${path.relative(projectRoot, projectCtx)}`);
 
   // --- 3. ESTRUCTURA CORE (.ai/) ---
   // Aquí guardamos tus skills y rules que vienen con el package

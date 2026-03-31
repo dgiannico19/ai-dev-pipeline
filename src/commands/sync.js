@@ -7,9 +7,11 @@ const {
   writeStepExtraSkillsMd,
   ensureTeamConfigYaml,
 } = require("../lib/specPaths");
+const { writeProjectContextMd } = require("../lib/projectDiscovery");
 
 /**
- * Asegura carpetas bajo docs_root, specs/config.yaml y el índice de skills extra del equipo.
+ * Asegura carpetas bajo docs_root, specs/config.yaml, índice de skills,
+ * y regenera specs/project-context.md (descubrimiento zero-config del repo).
  */
 const sync = async () => {
   const projectRoot = process.cwd();
@@ -28,6 +30,10 @@ const sync = async () => {
 
   const skillsMd = writeStepExtraSkillsMd(projectRoot, paths, config);
   console.log(`✔ Actualizado: ${path.relative(projectRoot, skillsMd)}`);
+
+  const projectCtx = writeProjectContextMd(projectRoot, paths);
+  console.log(`✔ Contexto del repo: ${path.relative(projectRoot, projectCtx)}`);
+
   console.log("\n✅ Sync completado.");
 };
 
