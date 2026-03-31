@@ -1,6 +1,6 @@
 {
   "name": "spec-driven-pipeline",
-  "version": "2.0.3",
+  "version": "2.0.4",
   "description": "CLI spec-driven: agentes, skills y árbol specs/ para Cursor, Windsurf y Claude Code",
   "bin": {
     "spec-driven-pipeline": "./bin/cli.js"
@@ -13,14 +13,6 @@
     "url": "https://github.com/dgiannico19/spec-driven-pipeline/issues"
   },
   "homepage": "https://github.com/dgiannico19/spec-driven-pipeline#readme",
-  "files": [
-    "README.md",
-    "LICENSE",
-    "bin",
-    "docs",
-    "src",
-    "templates"
-  ],
   "keywords": [
     "spec-driven",
     "specs",

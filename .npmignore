@@ -1,0 +1,14 @@
+node_modules/
+.git/
+.github/
+*.tgz
+.DS_Store
+coverage/
+.nyc_output/
+*.log
+.env
+.env.*
+specs/
+package-lock.json
+.vscode/
+.cursor/

@@ -1,8 +1,8 @@
 # Spec-Driven Pipeline
 
-[![npm](https://img.shields.io/npm/v/spec-driven-pipeline.svg)](https://www.npmjs.com/package/spec-driven-pipeline)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Node](https://img.shields.io/badge/node-%3E%3D18-339933?logo=node.js&logoColor=white)](https://nodejs.org/)
+**npm:** [spec-driven-pipeline](https://www.npmjs.com/package/spec-driven-pipeline) · **Licencia:** [MIT](https://opensource.org/licenses/MIT) · **Node.js:** [>= 18](https://nodejs.org/)
+
+> En GitHub podés usar badges con shields.io; en npmjs.com el README se renderiza mejor sin imágenes externas al inicio del archivo.
 
 **Framework CLI para equipos que quieren IA que *ejecute*, no solo converse.** Un único paquete npm combina **descubrimiento automático del repositorio**, **33 skills documentadas** bajo el estándar **Zero-Guesswork** y un **agente autónomo** que llama herramientas en bucle, puede alinearse a tus **specs en Markdown** y cerrar con verificación explícita.
 
