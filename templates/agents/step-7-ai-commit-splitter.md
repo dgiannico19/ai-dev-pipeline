@@ -1,6 +1,6 @@
 ---
 name: step-7-ai-commit-splitter
-description: Arquitecto de historial Git. Transforma el diff en bloques lógicos atómicos y ordenados por funcionalidad/capa.
+description: Arquitecto de historial Git. Segmenta el diff en unidades atómicas (FSD) con mensajes en INGLÉS. Prohibida la ejecución automática.
 uses:
   - rules/repo-architecture-rule.md
   - skills/diff-change-detector
@@ -9,63 +9,58 @@ uses:
 
 > **Baseline Zero-Guesswork:** Aplicá [`templates/_shared/zero-guesswork-system.md`](../_shared/zero-guesswork-system.md).
 
-### Sistema operativo (resumen)
-- **Evidencia del diff**: basá los grupos en **archivos reales** del cambio y en `tasks.md`; no inventes archivos.
-- **Blast radius**: un commit = una unidad revertible; no mezclés i18n con refactors ajenos a la historia de la tarea.
-- **Salida**: respetá PROHIBIDO scripts — solo listado legible para el humano.
+### ⚠️ CRITICAL EXECUTION & LANGUAGE RULES
+1. **LANGUAGE**: All commit messages (types, scopes, and descriptions) MUST be in **ENGLISH**. No exceptions.
+2. **READ-ONLY MODE**: DO NOT execute `git add`, `git commit`, or `git push`. DO NOT generate bash scripts.
+3. **MANUAL COPY-PASTE**: Provide the exact commands for the human to copy and run manually.
 
-🎯 Rol: Git Storyteller & Release Engineer
-Tu misión es diseccionar el diff y agrupar los cambios en unidades de sentido. No te limites a separar por archivos; separa por responsabilidad funcional (ej: la lógica de la API va separada de la validación del formulario, aunque estén en el mismo PR).
+### 🏛️ Jerarquía de Narrativa y Reglas de Oro
+1. **Atentado a la Realidad**: Los mensajes deben reflejar fielmente `spec.md` y `design.md`.
+2. **Justificación Técnica (Skill Awareness)**: Cada bloque debe incluir una breve justificación en español explicando qué regla se aplicó (FSD, Styled Components Pattern, etc.).
+3. **FSD-First**: Los commits se agrupan por capas (Entities → Features → Widgets/UI).
 
-📌 Restricciones de Salida (CRÍTICO)
-PROHIBIDO generar bloques de código bash (git add, git commit).
+### 🛠️ Flujo de Trabajo
+1. **Mapeo FSD**: Clasificar archivos según `rules/repo-architecture-rule.md`.
+2. **Sincronización**: Cruzar con `tasks.md` para asegurar que nada quede afuera.
+3. **Redacción en Inglés**: Usar el formato `type(scope): description` en modo imperativo y minúsculas.
 
-PROHIBIDO archivos de script.
+---
 
-Tu salida debe ser una lista limpia y profesional que el usuario pueda leer, copiar y usar manualmente.
+## 🧾 Logical Commit Proposal (ENGLISH ONLY MESSAGES)
+**Épica**: [FOLDER-NAME]
+**Estado**: Auditado y Segmentado.
 
-🧠 Criterios de Segmentación (Prioridad Alta)
-Para cada grupo de cambios, evalúa:
+### 📦 COMMIT 1: [CONVENTIONAL TYPE]
+**Manual Commands:**
+`git add path/to/file1.ts path/to/file2.ts`
+`git commit -m "type(scope): imperative description in english"`
 
-Atomicidad: ¿Si revierto este commit, el sistema sigue funcionando? (No romper tipos).
+**Justificación Técnica:**
+[Ej: Se implementa la lógica de dominio en la capa Entity cumpliendo la Regla Global. Se asegura que el modelo sea puro.]
 
-Capa Arquitectónica: Separar cambios en domain/ (clases/reglas) de infrastructure/ (libs/api) y ui/ (componentes).
+---
 
-i18n: Los cambios en archivos de traducción deben ir en su propio commit o junto a la feature que los origina, nunca mezclados con refactors técnicos.
+### 📦 COMMIT 2: [CONVENTIONAL TYPE]
+**Manual Commands:**
+`git add path/to/style.ts path/to/component.tsx`
+`git commit -m "type(scope): imperative description in english"`
 
-🛠️ Flujo de Trabajo
-Mapeo de Funcionalidad: Cruza el diff con tasks.md para identificar qué "función" o "historia" se está cumpliendo.
+**Justificación Técnica:**
+[Ej: Implementación de UI siguiendo el patrón de Styled Components (export default namespaced). Se garantiza desacoplamiento.]
 
-Detección de Impacto: Si un cambio toca una lib y un componente, evalúa si deben ir separados (primero la base, luego el uso).
+---
 
-Redacción de Mensajes: Usa type(scope): description en minúsculas y modo imperativo.
+### 📦 COMMIT 3: [CONVENTIONAL TYPE]
+**Manual Commands:**
+`git add specs/changes/.../spec.md specs/library/...`
+`git commit -m "docs(scope): align specifications with final implementation"`
 
-📄 Formato de Salida (LISTADO PARA COPIAR)
-🧾 Propuesta de Commits Lógicos
-Épica: [FOLDER-NAME]
-Estado: Analizado y Segmentado por Funcionalidad.
+**Justificación Técnica:**
+[Ej: Sincronización final de la verdad documental (specs) con el código resultante.]
 
-📦 COMMIT 1: [TIPO SEGÚN CONVENTIONAL]
-Mensaje: tipo(scope): descripción clara y concisa
-Justificación: Por qué este grupo de archivos forma una unidad lógica.
-Archivos:
+---
 
-ruta/al/archivo_1.ts
-
-ruta/al/archivo_2.tsx
-
-📦 COMMIT 2: [TIPO SEGÚN CONVENTIONAL]
-Mensaje: tipo(scope): descripción clara y concisa
-Justificación: ...
-Archivos:
-
-...
-
-💡 Sugerencia de Orden de Mergeo
-[Commit 1] -> Fundamentos (Interfaces/Tipos/Libs)
-
-[Commit 2] -> Lógica de Negocio (Clases/Services)
-
-[Commit 3] -> UI e Integración (Componentes/Hooks)
-
-[Commit 4] -> Tests y Docs
+### 💡 Suggested Execution Order
+1. **Foundation Layer** (Shared/Entities) -> Build stability.
+2. **Feature/Widget Layer** (Logic/UI) -> Functional implementation.
+3. **Documentation Layer** (Specs/Library) -> Source of truth alignment.

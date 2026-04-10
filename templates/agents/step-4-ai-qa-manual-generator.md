@@ -1,91 +1,61 @@
 ---
 name: step-4-ai-spec-behavior-generator
-description: "Refina spec.md con comportamiento verificable, genera testing.md (QA) y sincroniza fragmentos relevantes en specs/library/."
+description: Refina spec.md con comportamiento verificable, genera testing.md y asegura que la librería global herede contratos FSD válidos.
 uses:
   - rules/repo-architecture-rule.md
   - skills/qa-edge-case-expander
   - skills/qa-test-matrix-builder
   - skills/usage-manual-builder
   - skills/fsd-structure-validator
+  - skills/fsd-architecture-validator
 ---
 
 > **Baseline Zero-Guesswork:** Aplicá [`templates/_shared/zero-guesswork-system.md`](../_shared/zero-guesswork-system.md).
 
+### 🏛️ Jerarquía de Verdad y Blindaje de Contratos
+1. **REGLA SUPREMA**: `rules/repo-architecture-rule.md`. Los ejemplos de implementación en el "Manual Técnico" y los archivos en `specs/library/` DEBEN respetar las capas FSD. Prohibido documentar ejemplos que importen desde rutas internas.
+2. **Sincronización Total**: Este agente es el responsable final de que `spec.md`, `testing.md` y la `library/` estén en perfecta sintonía. Si un escenario de prueba revela un borde no cubierto, la `spec.md` debe actualizarse primero.
+
 ### Sistema operativo (resumen)
-- **Trazabilidad CA ↔ escenarios**: cada **CA-XX** en `spec.md` debe mapear a filas/casos en `testing.md` con IDs explícitos (sin “TBD” silencioso).
-- **No inventes comportamiento**: todo SHALL/MUST debe poder citar origen en `design.md` o acuerdo explícito en `spec.md`.
-- **Blast radius**: `testing.md` cubre **solo** lo que la épica define; no añadas suites enteras fuera de scope.
-- **Librería**: copiar a `specs/library/` solo contratos **estables** y con ruta/nombre acordados — verificá que el destino no sobrescriba doc ajena sin intención.
+- **Trazabilidad Inquebrantable**: Cada **CA-XX** (Criterio de Aceptación) en `spec.md` debe tener su contraparte exacta en `testing.md`.
+- **Validación FSD en Docs**: Antes de guardar `testing.md`, el `fsd-architecture-validator` debe verificar que los fragmentos de código (imports/exports) sigan la regla global.
+- **Librería**: Solo se promocionan a `specs/library/` aquellos contratos que sean "Public API" (`index.ts`).
 
-# Agente: Comportamiento, QA y librería
+### Responsabilidades:
+1. **Refinamiento de Comportamiento**: Completar `spec.md` con escenarios GIVEN/WHEN/THEN que cubran casos de éxito y error.
+2. **Manual de Uso Técnico**: Crear ejemplos de código en `testing.md` que sirvan de guía para el Step 5, asegurando que los componentes sean usados como "Ciegos" o "Inyectados" según FSD.
+3. **QA Matrix**: Generar la matriz de verificación vinculada a los IDs de la spec.
+4. **Promoción a Librería**: Actualizar `specs/library/` con el contrato estable de la nueva funcionalidad.
 
-### Objetivo
-Completar la **spec vinculante** (`spec.md`) con reglas y escenarios verificables, producir `testing.md` para ejecución/manual QA, y reflejar en `specs/library/` lo que el equipo considere verdad reutilizable (sin depender de carpetas `openspec/`).
-
-### Contexto de equipo
-- Lee `specs/config.yaml` y el `config.yaml` de la épica.
-- Consulta `specs/step-extra-skills.md` para skills extra de este agente.
-
-### Fuentes
-- `specs/changes/[FOLDER-NAME]/design.md`, `spec.md`, `tasks.md`.
-
-### Salidas
-- **Actualizar** `spec.md` al **formato unificado** (`templates/spec-unified-template.md`): cada requisito con SHALL/MUST y, bajo cada **Requirement**, escenarios con **GIVEN / AND / WHEN / THEN / AND**. Mantener **CA-XX** alineados con `testing.md`.
-- **Crear o actualizar** `testing.md` (matriz QA, escenarios, manual técnico).
-- **Opcional pero recomendado**: copiar o fundir en `specs/library/[modulo-slug].md` el contrato estable (según naming del equipo).
-
-### Sincronización con la librería (ejemplo)
-
-```bash
-mkdir -p specs/library
-# Ejemplo: consolidar spec de módulo (ajusta el slug)
-cp specs/changes/[FOLDER-NAME]/spec.md specs/library/[modulo-slug].md
-# O mantener design + behavior en archivos separados si así lo define el equipo:
-# cp specs/changes/[FOLDER-NAME]/design.md specs/library/[modulo-slug].architecture.md
-# cp specs/changes/[FOLDER-NAME]/testing.md specs/library/[modulo-slug].qa.md
-```
+### 🛠️ Flujo de Trabajo:
+1. **Ingesta**: Leer `design.md`, `spec.md` y `tasks.md`.
+2. **Expansión QA**: `qa-edge-case-expander` para encontrar escenarios de borde (error de red, datos corruptos, etc.).
+3. **Construcción de Manual**: `usage-manual-builder` asegurando que los ejemplos cumplan con `rules/repo-architecture-rule.md`.
+4. **Sincronización Final**: 
+   - Actualizar `spec.md` (SHALL/MUST y Escenarios).
+   - Crear/Actualizar `testing.md`.
+   - Copiar contrato validado a `specs/library/[modulo].md`.
 
 ---
 
-## Formato de contenido: testing.md (comportamiento y QA)
+#### 📄 Ajuste en testing.md: Verificación y Referencia
 
-## 1. Reglas de negocio / comportamiento
-> Debe ser **trazable** a `spec.md`: mismos RF/Requirement y escenarios GIVEN/WHEN/THEN.
+### Matriz de verificación (Trazable)
 
-### Reglas (opcional; o referencia directa a spec.md)
-- **BR-01:** [o: ver Requirement (RF-01) en spec.md]
-
-### Escenarios de prueba (espejo o extensión del spec)
-- **Escenario: [Nombre]** (alinear con `#### Scenario` del spec)
-  - **GIVEN:** …
-  - **WHEN:** …
-  - **THEN:** …
-
-## 2. Manual de referencia técnica
-*Potenciado por `usage-manual-builder`*
-
-### Contrato de interfaz (Props/Schema)
-| Atributo | Tipo | Obligatorio | Descripción |
+| ID Spec | ID Test | Caso | Resultado esperado |
 | :--- | :--- | :--- | :--- |
-| `prop` | `type` | yes/no | … |
+| **CA-01** | **HP-01** | [Happy Path] | [OK] |
+| **CA-02** | **ERR-01** | [Error de Validación] | [Mensaje correcto] |
 
-### Ejemplo de implementación
-```javascript
-// Verificado por fsd-structure-validator
-import { Item } from '@/shared/layer';
-```
+---
 
-## 3. Matriz de verificación
+### Ejemplo de implementación (FSD Compliant)
 
-| ID | Caso | Dataset / Mock | Resultado esperado |
-| :--- | :--- | :--- | :--- |
-| **HP-01** | Happy path | … | … |
-| **ERR-01** | Error API | … | … |
+```typescript
+// ✅ Verificado por fsd-architecture-validator
+// Importación desde Public API - Correcto según Layering
+import { MyFeature } from '@/features/my-feature'; 
 
-## 4. Datos de prueba (JSON)
-
-```json
-{
-  "scenarios": []
-}
+// Ejemplo de uso respetando desacoplamiento:
+const Example = () => <MyFeature onAction={handleAction} />;
 ```
